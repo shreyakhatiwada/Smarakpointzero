@@ -5,49 +5,50 @@ using UnityEngine;
 public class LoadOnTouch : MonoBehaviour
 {
     public GameObject Prefab;
-    public bool isPressed = false;
+    private bool isPressed = false;
 
     // Update is called once per frame
-    void Start()
-    {
+    void Start(){
         Prefab.SetActive(false);
     }
-
     void Update()
     {
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        if (Input.touchCount > 0)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
             {
-                isPressed = !isPressed;
-                if (hit.collider != null)
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                    if (isPressed)
+                    if (hit.collider != null && hit.collider.gameObject == gameObject)
                     {
-                        SpawnObject();
-                    }
-                    else
-                    {
-                        DespawnObject();
+                        isPressed = !isPressed;
+                        if (isPressed)
+                        {
+                            SpawnObject();
+                        }
+                        else
+                        {
+                            DespawnObject();
+                        }
                     }
                 }
             }
         }
 
-        // Desktop Test
-        if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0)) // If no touch, check for mouse click (for desktop)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
-                isPressed = !isPressed;
-                if (hit.collider != null)
+                if (hit.collider != null && hit.collider.gameObject == gameObject)
                 {
+                    isPressed = !isPressed;
                     if (isPressed)
                     {
                         SpawnObject();
@@ -63,13 +64,17 @@ public class LoadOnTouch : MonoBehaviour
 
     void SpawnObject()
     {
-        // Instantiate(Prefab, transform.position, Quaternion.identity);
-        Prefab.SetActive(true);
+        if (Prefab != null)
+        {
+            Prefab.SetActive(true);
+        }
     }
 
     void DespawnObject()
     {
-        // Destroy(Prefab);
-        Prefab.SetActive(false);
+        if (Prefab != null)
+        {
+            Prefab.SetActive(false);
+        }
     }
 }
