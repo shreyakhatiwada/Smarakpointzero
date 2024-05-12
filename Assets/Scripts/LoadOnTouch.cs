@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class LoadOnTouch : MonoBehaviour
 {
-    public GameObject Prefab;
+    public int numberOfPrefabs = 10;
+    public GameObject[] Prefab;
     private bool isPressed = false;
 
     // Update is called once per frame
     void Start(){
-        Prefab.SetActive(false);
+        for (int i=0; i<numberOfPrefabs; i++){
+            Prefab[i].SetActive(false);
+        }
     }
     void Update()
     {
@@ -64,17 +67,22 @@ public class LoadOnTouch : MonoBehaviour
 
     void SpawnObject()
     {
-        if (Prefab != null)
-        {
-            Prefab.SetActive(true);
+        for (int i=0; i<numberOfPrefabs; i++){
+            if (Prefab[i] != null)
+            {
+                Prefab[i].SetActive(true);
+            }
         }
     }
 
     void DespawnObject()
     {
-        if (Prefab != null)
-        {
-            Prefab.SetActive(false);
+        for (int i=0; i<numberOfPrefabs; i++){
+            if (Prefab[i] != null)
+            {
+                Prefab[i].SetActive(false);
+            }
         }
+
     }
 }
